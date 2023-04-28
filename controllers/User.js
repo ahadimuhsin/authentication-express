@@ -3,14 +3,25 @@ import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken';
 export const getUsers = async(req, res) => {
     try {
-        const users = await Users.findAll({
-            attributes: ['id', 'name', 'email', 'team_id', 'site_id', 'photo_profile', 'last_login_at']
-        }, {
-            where: {
-                flag: 1
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1];
+        let userId;
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.sendStatus(403)
             }
+            userId = decoded.userId
+
+        })
+        const user = await Users.findOne({
+            attributes: { exclude: ['password', 'refresh_token'] },
+            where: {
+                id: userId,
+                flag: 1
+            },
+            include: ['team', 'site']
         });
-        res.formatter.ok(users);
+        res.formatter.ok(user);
     } catch (error) {
         console.log(error);
     }

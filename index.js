@@ -22,7 +22,7 @@ app.use(responseEnhancer())
 app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(router);
+app.use('/api/v1', router);
 
 app.listen(process.env.APP_PORT, () => {
     console.log("Server up and running")

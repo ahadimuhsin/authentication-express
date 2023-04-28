@@ -7,11 +7,11 @@ export const verifyToken = (req, res, next) => {
     if (token == null) {
         return res.sendStatus(401);
     }
-
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.sendStatus(403)
         }
+        console.log(decoded)
         req.email = decoded.email;
         next();
     })

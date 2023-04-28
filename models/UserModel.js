@@ -1,5 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
+import Teams from "./TeamModel.js";
+import Sites from "./SiteModel.js";
 
 const { DataTypes } = Sequelize;
 
@@ -55,5 +57,6 @@ const Users = db.define('mr_user_mobile', {
     freezeTableName: true,
     timestamps: false,
 })
-
+Users.belongsTo(Teams, { as: 'team', foreignKey: 'team_id' })
+Users.belongsTo(Sites, { as: 'site', foreignKey: 'site_id' })
 export default Users
